@@ -9,8 +9,27 @@ import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalField;
 import java.time.temporal.TemporalUnit;
 
+import static java.time.temporal.ChronoField.*;
+
 public class IranianDate
         implements Temporal, TemporalAdjuster, ChronoLocalDate, Serializable {
+
+    private final int year;
+    private final short month;
+    private final short day;
+
+    private IranianDate(int year, int month, int day) {
+        this.year = year;
+        this.month = (short) month;
+        this.day = (short) day;
+    }
+
+    public static IranianDate of(int year, int month, int day) {
+        YEAR.checkValidValue(year);
+        MONTH_OF_YEAR.checkValidValue(month);
+        DAY_OF_MONTH.checkValidValue(day);
+        return new IranianDate(year, month, day);
+    }
 
     @Override
     public Chronology getChronology() {
@@ -19,7 +38,12 @@ public class IranianDate
 
     @Override
     public int lengthOfMonth() {
-        return 0;
+        if (month <= 6)
+            return 31;
+        else if (month <= 11)
+            return 30;
+        else
+            return isLeapYear() ? 30 : 29;
     }
 
     @Override
