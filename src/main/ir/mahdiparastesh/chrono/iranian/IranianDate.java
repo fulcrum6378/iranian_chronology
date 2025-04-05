@@ -1,6 +1,7 @@
 package ir.mahdiparastesh.chrono.iranian;
 
 import java.io.Serializable;
+import java.time.DateTimeException;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoPeriod;
 import java.time.chrono.Chronology;
@@ -31,6 +32,17 @@ public class IranianDate
         return new IranianDate(year, month, day);
     }
 
+    public static IranianDate ofYearDay(int year, int dayOfYear) {
+        YEAR.checkValidValue(year);
+        DAY_OF_YEAR.checkValidValue(dayOfYear);
+        boolean leap = IranianChronology.INSTANCE.isLeapYear(year);
+        if (dayOfYear == 366 && !leap)
+            throw new DateTimeException("Invalid date 'DayOfYear 366' as '" + year + "' is not a leap year");
+
+        // TODO
+        return null;
+    }
+
     @Override
     public Chronology getChronology() {
         return IranianChronology.INSTANCE;
@@ -48,16 +60,16 @@ public class IranianDate
 
     @Override
     public ChronoPeriod until(ChronoLocalDate endDateExclusive) {
-        return null;
+        return null;  // TODO
     }
 
     @Override
     public long until(Temporal endExclusive, TemporalUnit unit) {
-        return 0;
+        return 0;  // TODO
     }
 
     @Override
     public long getLong(TemporalField field) {
-        return 0;
+        return 0;  // TODO
     }
 }

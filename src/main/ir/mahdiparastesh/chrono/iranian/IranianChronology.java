@@ -24,23 +24,23 @@ public class IranianChronology extends AbstractChronology implements Serializabl
     }
 
     @Override
-    public ChronoLocalDate date(int prolepticYear, int month, int dayOfMonth) {
-        return null;
+    public IranianDate date(int prolepticYear, int month, int dayOfMonth) {
+        return IranianDate.of(prolepticYear, month, dayOfMonth);
     }
 
     @Override
-    public ChronoLocalDate dateYearDay(int prolepticYear, int dayOfYear) {
-        return null;
+    public IranianDate dateYearDay(int prolepticYear, int dayOfYear) {
+        return IranianDate.ofYearDay(prolepticYear, dayOfYear);
     }
 
     @Override
-    public ChronoLocalDate dateEpochDay(long epochDay) {
-        return null;
+    public IranianDate dateEpochDay(long epochDay) {
+        return null;  //TODO IranianDate.ofEpochDay(epochDay);
     }
 
     @Override
-    public ChronoLocalDate date(TemporalAccessor temporal) {
-        return null;
+    public IranianDate date(TemporalAccessor temporal) {
+        return null;  //TODO IranianDate.from(temporal);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class IranianChronology extends AbstractChronology implements Serializabl
 
     @Override
     public int prolepticYear(Era era, int yearOfEra) {
-        return 0;
+        return yearOfEra;
     }
 
     @Override
@@ -63,11 +63,11 @@ public class IranianChronology extends AbstractChronology implements Serializabl
 
     @Override
     public List<Era> eras() {
-        return List.of();
+        return null;
     }
 
     @Override
     public ValueRange range(ChronoField field) {
-        return null;
+        return null;  // TODO
     }
 }
