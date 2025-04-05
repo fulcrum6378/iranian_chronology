@@ -45,7 +45,10 @@ public class IranianChronology extends AbstractChronology implements Serializabl
 
     @Override
     public boolean isLeapYear(long prolepticYear) {
-        return false;
+        while (prolepticYear < 0) prolepticYear += 2820L;
+        long periodicYear = (prolepticYear - 5474L) % 2820L;
+        long test = ((periodicYear + 38L) * 682L) % 2816L;
+        return test < 682;
     }
 
     @Override
