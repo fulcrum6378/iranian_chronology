@@ -1,15 +1,14 @@
 package ir.mahdiparastesh.chrono.iranian;
 
-import java.io.Serializable;
 import java.time.chrono.AbstractChronology;
-import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.Era;
 import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
+import java.time.temporal.UnsupportedTemporalTypeException;
 import java.time.temporal.ValueRange;
 import java.util.List;
 
-public class IranianChronology extends AbstractChronology implements Serializable {
+public class IranianChronology extends AbstractChronology {  // implements Serializable
 
     public static final IranianChronology INSTANCE = new IranianChronology();
 
@@ -68,6 +67,18 @@ public class IranianChronology extends AbstractChronology implements Serializabl
 
     @Override
     public ValueRange range(ChronoField field) {
-        return null;  // TODO
+        return switch (field) {
+            case ChronoField.DAY_OF_MONTH -> ValueRange.of(1, 29, 31);
+            case ChronoField.ALIGNED_WEEK_OF_MONTH -> ValueRange.of(1, 5);
+            default -> field.range();
+        };
+    }
+
+    public static class EraNotSupportedException extends UnsupportedTemporalTypeException {
+        private static final String msg = "Eras are not supported.";
+
+        public EraNotSupportedException() {
+            super(msg);
+        }
     }
 }
