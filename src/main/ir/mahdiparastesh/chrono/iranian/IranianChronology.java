@@ -1,17 +1,13 @@
 package ir.mahdiparastesh.chrono.iranian;
 
 import java.io.Serializable;
-import java.time.Clock;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.chrono.*;
-import java.time.format.TextStyle;
+import java.time.chrono.AbstractChronology;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.Era;
 import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.ValueRange;
 import java.util.List;
-import java.util.Locale;
 
 public class IranianChronology extends AbstractChronology implements Serializable {
 
@@ -28,18 +24,8 @@ public class IranianChronology extends AbstractChronology implements Serializabl
     }
 
     @Override
-    public ChronoLocalDate date(Era era, int yearOfEra, int month, int dayOfMonth) {
-        return super.date(era, yearOfEra, month, dayOfMonth);
-    }
-
-    @Override
     public ChronoLocalDate date(int prolepticYear, int month, int dayOfMonth) {
         return null;
-    }
-
-    @Override
-    public ChronoLocalDate dateYearDay(Era era, int yearOfEra, int dayOfYear) {
-        return super.dateYearDay(era, yearOfEra, dayOfYear);
     }
 
     @Override
@@ -53,38 +39,8 @@ public class IranianChronology extends AbstractChronology implements Serializabl
     }
 
     @Override
-    public ChronoLocalDate dateNow() {
-        return super.dateNow();
-    }
-
-    @Override
-    public ChronoLocalDate dateNow(ZoneId zone) {
-        return super.dateNow(zone);
-    }
-
-    @Override
-    public ChronoLocalDate dateNow(Clock clock) {
-        return super.dateNow(clock);
-    }
-
-    @Override
     public ChronoLocalDate date(TemporalAccessor temporal) {
         return null;
-    }
-
-    @Override
-    public ChronoLocalDateTime<? extends ChronoLocalDate> localDateTime(TemporalAccessor temporal) {
-        return super.localDateTime(temporal);
-    }
-
-    @Override
-    public ChronoZonedDateTime<? extends ChronoLocalDate> zonedDateTime(TemporalAccessor temporal) {
-        return super.zonedDateTime(temporal);
-    }
-
-    @Override
-    public ChronoZonedDateTime<? extends ChronoLocalDate> zonedDateTime(Instant instant, ZoneId zone) {
-        return super.zonedDateTime(instant, zone);
     }
 
     @Override
@@ -110,30 +66,5 @@ public class IranianChronology extends AbstractChronology implements Serializabl
     @Override
     public ValueRange range(ChronoField field) {
         return null;
-    }
-
-    @Override
-    public String getDisplayName(TextStyle style, Locale locale) {
-        return super.getDisplayName(style, locale);
-    }
-
-    @Override
-    public ChronoPeriod period(int years, int months, int days) {
-        return super.period(years, months, days);
-    }
-
-    @Override
-    public long epochSecond(int prolepticYear, int month, int dayOfMonth, int hour, int minute, int second, ZoneOffset zoneOffset) {
-        return super.epochSecond(prolepticYear, month, dayOfMonth, hour, minute, second, zoneOffset);
-    }
-
-    @Override
-    public long epochSecond(Era era, int yearOfEra, int month, int dayOfMonth, int hour, int minute, int second, ZoneOffset zoneOffset) {
-        return super.epochSecond(era, yearOfEra, month, dayOfMonth, hour, minute, second, zoneOffset);
-    }
-
-    @Override
-    public boolean isIsoBased() {
-        return super.isIsoBased();
     }
 }
