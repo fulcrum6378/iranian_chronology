@@ -2,6 +2,8 @@ package ir.mahdiparastesh.chrono.iranian;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IranianChronologyTest {
@@ -21,6 +23,10 @@ public class IranianChronologyTest {
         assertEquals(
                 IranianDate.of(6404, 12, 29),
                 IranianChronology.INSTANCE.dateYearDay(6404, 365)
+        );
+        assertEquals(
+                IranianDate.of(6404, 1, 16),
+                IranianChronology.INSTANCE.date(LocalDate.of(2025, 4, 5))
         );
     }
 

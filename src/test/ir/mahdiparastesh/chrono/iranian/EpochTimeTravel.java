@@ -4,10 +4,16 @@ import java.time.LocalDate;
 
 /**
  * Calculates epoch days from a given date.
- * 1970/01/01 == 6348/10/11 (Thursday; both normal years)
  */
 public class EpochTimeTravel {
-    private final LocalDate epochStart = LocalDate.of(1970, 1, 1);
+
+    private static final LocalDate epochStart =
+            LocalDate.of(1970, 1, 1);  // Thursday
+    private static final LocalDate irEpochStart =
+            LocalDate.of(6348, 10, 11);
+
+    private static final LocalDate thisNowruz =
+            LocalDate.of(2025, 3, 21);
 
     public static void main(String[] args) {
         int destination;
@@ -25,14 +31,11 @@ public class EpochTimeTravel {
                 "\n");
 
         long days = 0;
-        while (year > destination) {
-            if ((year % 10) == 0)
-                System.out.println(days + " days since year " + year + "...");
+        while (year >= destination) {
             days += IranianChronology.INSTANCE.isLeapYear(year) ? 366 : 365;
             year--;
         }
-        System.out.println("\nFinally: " + days + " days!");
-        /*if (destination == 6349)
-            System.out.println("Plus days until : " + days + " days!");*/
+        System.out.println("Finally: " + days + " + 79 = " + (days + 79) + " days");
+        System.out.println("While 2025/3/21 == " + thisNowruz.toEpochDay() + " epoch days");
     }
 }

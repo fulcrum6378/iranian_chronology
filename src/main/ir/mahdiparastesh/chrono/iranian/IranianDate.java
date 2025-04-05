@@ -50,6 +50,12 @@ public class IranianDate
         return new IranianDate(year, month, dayOfYear);
     }
 
+    // TODO: now()
+
+    public static IranianDate ofEpochDay(long epochDay) {
+        return null;  // TODO
+    }
+
     @Override
     public Chronology getChronology() {
         return IranianChronology.INSTANCE;

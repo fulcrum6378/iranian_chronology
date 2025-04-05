@@ -8,7 +8,8 @@ import java.time.temporal.UnsupportedTemporalTypeException;
 import java.time.temporal.ValueRange;
 import java.util.List;
 
-public class IranianChronology extends AbstractChronology {  // implements Serializable
+public class IranianChronology extends AbstractChronology {
+    // TODO implements Serializable
 
     public static final IranianChronology INSTANCE = new IranianChronology();
 
@@ -34,12 +35,12 @@ public class IranianChronology extends AbstractChronology {  // implements Seria
 
     @Override
     public IranianDate dateEpochDay(long epochDay) {
-        return null;  //TODO IranianDate.ofEpochDay(epochDay);
+        return IranianDate.ofEpochDay(epochDay);
     }
 
     @Override
     public IranianDate date(TemporalAccessor temporal) {
-        return null;  //TODO IranianDate.from(temporal);
+        return dateEpochDay(temporal.getLong(ChronoField.EPOCH_DAY));
     }
 
     @Override
@@ -74,7 +75,8 @@ public class IranianChronology extends AbstractChronology {  // implements Seria
         };
     }
 
-    public static class EraNotSupportedException extends UnsupportedTemporalTypeException {
+    public static class EraNotSupportedException
+            extends UnsupportedTemporalTypeException {
         private static final String msg = "Eras are not supported.";
 
         public EraNotSupportedException() {
