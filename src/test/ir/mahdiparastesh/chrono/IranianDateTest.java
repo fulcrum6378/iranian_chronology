@@ -8,6 +8,7 @@ import java.time.temporal.UnsupportedTemporalTypeException;
 import static java.time.temporal.ChronoField.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("CommentedOutCode")
 public class IranianDateTest {
 
     IranianDate testingDate = IranianDate.of(6404, 1, 16);
@@ -15,10 +16,63 @@ public class IranianDateTest {
 
     @Test
     public void creation() {
+        // ofYearDay
         assertEquals(
                 IranianDate.of(6404, 12, 29),
                 IranianDate.ofYearDay(6404, 365)
         );
+
+        // ofEpochDay
+        assertEquals(
+                IranianDate.of(6404, 1, 1),
+                IranianDate.ofEpochDay(LocalDate.of(2025, 3, 21).toEpochDay())
+        );
+        assertEquals(
+                IranianDate.of(6403, 12, 30),
+                IranianDate.ofEpochDay(LocalDate.of(2025, 3, 20).toEpochDay())
+        );
+        assertEquals(
+                IranianDate.of(6403, 12, 29),
+                IranianDate.ofEpochDay(LocalDate.of(2025, 3, 19).toEpochDay())
+        );
+        assertEquals(  // my birthday
+                IranianDate.of(6378, 11, 17),
+                IranianDate.ofEpochDay(LocalDate.of(2000, 2, 6).toEpochDay())
+        );
+        assertEquals(  // Apollo 13 launch date
+                IranianDate.of(6349, 1, 22),
+                IranianDate.ofEpochDay(LocalDate.of(1970, 4, 11).toEpochDay())
+        );
+        assertEquals(
+                IranianDate.of(6349, 1, 1),
+                IranianDate.ofEpochDay(LocalDate.of(1970, 3, 21).toEpochDay())
+        );
+        assertEquals(
+                IranianDate.of(6348, 12, 29),
+                IranianDate.ofEpochDay(LocalDate.of(1970, 3, 20).toEpochDay())
+        );
+        assertEquals(  // Epoch time
+                IranianDate.of(6348, 10, 11),
+                IranianDate.ofEpochDay(LocalDate.of(1970, 1, 1).toEpochDay())
+        );
+        assertEquals(  // Apollo 11 launch date
+                IranianDate.of(6348, 5, 2),
+                IranianDate.ofEpochDay(LocalDate.of(1969, 7, 24).toEpochDay())
+        );
+        assertEquals(
+                IranianDate.of(6348, 1, 1),
+                IranianDate.ofEpochDay(LocalDate.of(1969, 3, 21).toEpochDay())
+        );
+        assertEquals(
+                IranianDate.of(6347, 12, 29),
+                IranianDate.ofEpochDay(LocalDate.of(1969, 3, 20).toEpochDay())
+        );
+        assertEquals(  // Sigmund Freud's birthday
+                IranianDate.of(6235, 2, 16),
+                IranianDate.ofEpochDay(LocalDate.of(1856, 5, 6).toEpochDay())
+        );
+
+        // etc
         assertInstanceOf(IranianChronology.class, testingDate.getChronology());
     }
 
@@ -82,6 +136,14 @@ public class IranianDateTest {
                 LocalDate.of(1970, 4, 11).toEpochDay(),
                 IranianDate.of(6349, 1, 22).toEpochDay()
         );
+        assertEquals(
+                LocalDate.of(1970, 3, 21).toEpochDay(),
+                IranianDate.of(6349, 1, 1).toEpochDay()
+        );
+        assertEquals(
+                LocalDate.of(1970, 3, 20).toEpochDay(),
+                IranianDate.of(6348, 12, 29).toEpochDay()
+        );
         assertEquals(  // Epoch time
                 LocalDate.of(1970, 1, 1).toEpochDay(),
                 IranianDate.of(6348, 10, 11).toEpochDay()
@@ -90,14 +152,41 @@ public class IranianDateTest {
                 LocalDate.of(1969, 7, 24).toEpochDay(),
                 IranianDate.of(6348, 5, 2).toEpochDay()
         );
+        assertEquals(
+                LocalDate.of(1969, 3, 21).toEpochDay(),
+                IranianDate.of(6348, 1, 1).toEpochDay()
+        );
+        assertEquals(
+                LocalDate.of(1969, 3, 20).toEpochDay(),
+                IranianDate.of(6347, 12, 29).toEpochDay()
+        );
         assertEquals(  // Albert Einstein's birthday
                 LocalDate.of(1879, 3, 14).toEpochDay(),
                 IranianDate.of(6257, 12, 23).toEpochDay()
+        );
+        assertEquals(  // Sigmund Freud's birthday
+                LocalDate.of(1856, 5, 6).toEpochDay(),
+                IranianDate.of(6235, 2, 16).toEpochDay()
         );
         assertEquals(  // Charles Darwin's birthday
                 LocalDate.of(1809, 2, 12).toEpochDay(),
                 IranianDate.of(6187, 11, 23).toEpochDay()
         );
+        assertEquals(  // Isaac Newton's birthday
+                LocalDate.of(1643, 1, 4).toEpochDay(),
+                IranianDate.of(6021, 10, 14).toEpochDay()
+                // according to {Google, PersianCalendar, Fourmilab's converter}
+        );
+        /*assertEquals(  // Trijntje Keever's birthday
+                LocalDate.of(1616, 4, 10).toEpochDay(),  // -129196
+                IranianDate.of(5995, 1, 22).toEpochDay()  // -129195
+                // according to PersianCalendar & Fourmilab's converter
+        );*/
+        /*assertEquals(  // Avicenna's death
+                LocalDate.of(1037, 7, 22).toEpochDay(),  // -340569
+                IranianDate.of(5416, 4, 1).toEpochDay()  // -340614
+                // according only to Fourmilab's converter; differed in PersianCalendar
+        );*/
     }
 
     @Test

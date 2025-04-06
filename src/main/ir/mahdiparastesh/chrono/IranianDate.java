@@ -54,7 +54,35 @@ public class IranianDate
     // TODO: now()
 
     public static IranianDate ofEpochDay(long epochDay) {
-        return null;  // TODO
+        int y, yearLength;
+
+        if (epochDay >= 79L) {  // after 6348
+            epochDay -= 78L;
+            y = 6349;
+            while (true) {
+                yearLength = IranianChronology.INSTANCE.isLeapYear(y) ? 366 : 365;
+                if (epochDay > yearLength)
+                    epochDay -= yearLength;
+                else
+                    return ofYearDay(y, (int) epochDay);
+                y++;
+            }
+
+        } else if (epochDay < -286L) {  // before 6348
+            epochDay = -epochDay - 287L;
+            y = 6347;
+            while (true) {
+                yearLength = IranianChronology.INSTANCE.isLeapYear(y) ? 366 : 365;
+                if (epochDay > yearLength)
+                    epochDay -= yearLength;
+                else
+                    return ofYearDay(y, (int) (yearLength - epochDay));
+                y--;
+            }
+
+        } else {  // during 6348 (1969-1970)
+            return ofYearDay(6348, (int) epochDay + 287);
+        }
     }
 
     @Override
@@ -167,7 +195,7 @@ public class IranianDate
             days -= (IranianChronology.INSTANCE.isLeapYear(y) ? 366 : 365) - (getDayOfYear() - 1);
             return days;
 
-        } else {  // during 6348 (~1970)
+        } else {  // during 6348 (1969-1970)
             return getDayOfYear() - 287L;
         }
     }
@@ -226,5 +254,40 @@ public class IranianDate
             return compareTo0((IranianDate) obj) == 0;
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        var buf = new StringBuilder(10);
+        formatTo(buf);
+        return buf.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return (year & 0xFFFFF800) ^ ((year << 11) + (month << 6) + day);
+    }
+
+    void formatTo(StringBuilder buf) {
+        int yearValue = year;
+        int monthValue = month;
+        int dayValue = day;
+        int absYear = Math.abs(yearValue);
+        if (absYear < 1000) {
+            if (yearValue < 0) {
+                buf.append('-');
+            }
+            buf.repeat('0', absYear < 10 ? 3 : absYear < 100 ? 2 : 1);
+            buf.append(absYear);
+        } else {
+            if (yearValue > 9999) {
+                buf.append('+');
+            }
+            buf.append(yearValue);
+        }
+        buf.append(monthValue < 10 ? "-0" : "-")
+                .append(monthValue)
+                .append(dayValue < 10 ? "-0" : "-")
+                .append(dayValue);
     }
 }
