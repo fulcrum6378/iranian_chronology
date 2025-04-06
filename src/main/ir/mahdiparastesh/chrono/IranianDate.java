@@ -20,14 +20,15 @@ public class IranianDate
         this.year = year;
         this.month = (short) month;
         this.day = (short) day;
+
+        if (month == 12 && day == 30 && !isLeapYear())
+            throw new DateTimeException("Year " + year + " is not a leap year!");
     }
 
     public static IranianDate of(int year, int month, int day) {
         YEAR.checkValidValue(year);
         MONTH_OF_YEAR.checkValidValue(month);
         IranianChronology.INSTANCE.range(DAY_OF_MONTH).checkValidValue(day, DAY_OF_MONTH);
-        // TODO WHAT IF I CREATE 6404/12/30?
-
         return new IranianDate(year, month, day);
     }
 

@@ -2,6 +2,7 @@ package ir.mahdiparastesh.chrono;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.temporal.UnsupportedTemporalTypeException;
 
@@ -16,6 +17,12 @@ public class IranianDateTest {
 
     @Test
     public void creation() {
+        // of
+        assertThrows(DateTimeException.class, () -> IranianDate.of(6404, 13, 1));
+        assertThrows(DateTimeException.class, () -> IranianDate.of(6404, 0, 1));
+        assertThrows(DateTimeException.class, () -> IranianDate.of(6404, 1, 0));
+        assertThrows(DateTimeException.class, () -> IranianDate.of(6404, 12, 30));
+
         // ofYearDay
         assertEquals(
                 IranianDate.of(6404, 12, 29),
