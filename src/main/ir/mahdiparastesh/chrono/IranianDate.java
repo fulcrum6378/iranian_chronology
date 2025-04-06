@@ -147,7 +147,29 @@ public class IranianDate
 
     @Override
     public long toEpochDay() {
-        return 0;  // TODO
+        if (year > 6348) {  // after 6348
+            long days = 79L;
+            int y = 6349;
+            while (y != year) {
+                days += IranianChronology.INSTANCE.isLeapYear(y) ? 366 : 365;
+                y++;
+            }
+            days += getDayOfYear() - 1;
+            return days;
+
+        } else if (year < 6348) {  // before 6348
+            long days = -286L;
+            int y = 6347;
+            while (y != year) {
+                days -= IranianChronology.INSTANCE.isLeapYear(y) ? 366 : 365;
+                y--;
+            }
+            days -= (IranianChronology.INSTANCE.isLeapYear(y) ? 366 : 365) - (getDayOfYear() - 1);
+            return days;
+
+        } else {  // during 6348 (~1970)
+            return getDayOfYear() - 287L;
+        }
     }
 
     //-----------------------------------------------------------------------

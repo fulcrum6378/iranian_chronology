@@ -60,7 +60,44 @@ public class IranianDateTest {
     @Test
     public void getLong() {
         assertEquals(76848L, testingDate.getLong(PROLEPTIC_MONTH));
-        assertEquals(greTestingDate.toEpochDay(), testingDate.toEpochDay());  // 20183
+
+        assertEquals(greTestingDate.toEpochDay(), testingDate.toEpochDay());
+        assertEquals(  // my brother's birthday
+                LocalDate.of(2006, 10, 4).toEpochDay(),
+                IranianDate.of(6385, 7, 12).toEpochDay()
+        );
+        assertEquals(  // my birthday
+                LocalDate.of(2000, 2, 6).toEpochDay(),
+                IranianDate.of(6378, 11, 17).toEpochDay()
+        );
+        assertEquals(  // Mobina Jafarian's birthday
+                LocalDate.of(1999, 8, 21).toEpochDay(),
+                IranianDate.of(6378, 5, 30).toEpochDay()
+        );
+        assertEquals(  // dissolution of the Soviet Union
+                LocalDate.of(1991, 12, 26).toEpochDay(),
+                IranianDate.of(6370, 10, 5).toEpochDay()
+        );
+        assertEquals(  // Apollo 13 launch date
+                LocalDate.of(1970, 4, 11).toEpochDay(),
+                IranianDate.of(6349, 1, 22).toEpochDay()
+        );
+        assertEquals(  // Epoch time
+                LocalDate.of(1970, 1, 1).toEpochDay(),
+                IranianDate.of(6348, 10, 11).toEpochDay()
+        );
+        assertEquals(  // Apollo 11 launch date
+                LocalDate.of(1969, 7, 24).toEpochDay(),
+                IranianDate.of(6348, 5, 2).toEpochDay()
+        );
+        assertEquals(  // Albert Einstein's birthday
+                LocalDate.of(1879, 3, 14).toEpochDay(),
+                IranianDate.of(6257, 12, 23).toEpochDay()
+        );
+        assertEquals(  // Charles Darwin's birthday
+                LocalDate.of(1809, 2, 12).toEpochDay(),
+                IranianDate.of(6187, 11, 23).toEpochDay()
+        );
     }
 
     @Test
