@@ -1,4 +1,4 @@
-package ir.mahdiparastesh.chrono.iranian;
+package ir.mahdiparastesh.chrono;
 
 import org.junit.jupiter.api.Test;
 
