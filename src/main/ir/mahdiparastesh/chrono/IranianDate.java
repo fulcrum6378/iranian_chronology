@@ -1,16 +1,19 @@
 package ir.mahdiparastesh.chrono;
 
+import java.io.*;
 import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoPeriod;
 import java.time.chrono.Chronology;
+import java.time.chrono.Era;
 import java.time.temporal.*;
+import java.util.Objects;
 
 import static java.time.temporal.ChronoField.*;
 
 public class IranianDate
-        implements Temporal, TemporalAdjuster, ChronoLocalDate {  // TODO Serializable
+        implements Temporal, TemporalAdjuster, ChronoLocalDate, Serializable {
 
     private final int year;
     private final short month;
@@ -24,6 +27,9 @@ public class IranianDate
         if (month == 12 && day == 30 && !isLeapYear())
             throw new DateTimeException("Year " + year + " is not a leap year!");
     }
+
+
+    //-------------------------BUILDERS--------------------------------------
 
     public static IranianDate of(int year, int month, int day) {
         YEAR.checkValidValue(year);
@@ -86,12 +92,19 @@ public class IranianDate
         }
     }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
+    @Override
+    public Object clone() {
+        return new IranianDate(year, month, day);
+    }
+
+
+    //-------------------------ESSENTIALS------------------------------------
+
     @Override
     public Chronology getChronology() {
         return IranianChronology.INSTANCE;
     }
-
-    //-----------------------------------------------------------------------
 
     @Override
     public int lengthOfMonth() {
@@ -103,19 +116,8 @@ public class IranianDate
             return isLeapYear() ? 30 : 29;
     }
 
-    //-----------------------------------------------------------------------
 
-    @Override
-    public ChronoPeriod until(ChronoLocalDate endDateExclusive) {
-        return null;  // TODO
-    }
-
-    @Override
-    public long until(Temporal endExclusive, TemporalUnit unit) {
-        return 0;  // TODO
-    }
-
-    //-----------------------------------------------------------------------
+    //-------------------------GETTERS---------------------------------------
 
     @Override
     public long getLong(TemporalField field) {
@@ -129,6 +131,14 @@ public class IranianDate
             return get0(field);
         }
         return field.getFrom(this);
+    }
+
+    @Override
+    public int get(TemporalField field) {
+        if (field instanceof ChronoField) {
+            return get0(field);
+        }
+        return ChronoLocalDate.super.get(field);
     }
 
     private int get0(TemporalField field) {
@@ -175,6 +185,11 @@ public class IranianDate
     }
 
     @Override
+    public Era getEra() {
+        throw new IranianChronology.EraNotSupportedException();
+    }
+
+    @Override
     public long toEpochDay() {
         if (year > 6348) {  // after 6348
             long days = 79L;
@@ -201,7 +216,40 @@ public class IranianDate
         }
     }
 
-    //-----------------------------------------------------------------------
+    @Override
+    public boolean isSupported(TemporalField field) {
+        if (field instanceof ChronoField) {
+            if (field == ERA || field == YEAR_OF_ERA)
+                return false;
+            return field.isDateBased();
+        }
+        return field != null && field.isSupportedBy(this);
+    }
+
+    @Override
+    public boolean isSupported(TemporalUnit unit) {
+        if (unit instanceof ChronoUnit) {
+            if (unit == ChronoUnit.ERAS)
+                return false;
+            return unit.isDateBased();
+        }
+        return unit != null && unit.isSupportedBy(this);
+    }
+
+    @Override
+    public ValueRange range(TemporalField field) {
+        if (field instanceof ChronoField) {
+            if (isSupported(field)) {
+                return IranianChronology.INSTANCE.range((ChronoField) field);
+            }
+            throw new UnsupportedTemporalTypeException("Unsupported field: " + field);
+        }
+        Objects.requireNonNull(field, "field");
+        return field.rangeRefinedBy(this);
+    }
+
+
+    //-------------------------COMPARISON------------------------------------
 
     @Override
     public int compareTo(ChronoLocalDate other) {
@@ -257,16 +305,61 @@ public class IranianDate
         return false;
     }
 
+
+    //-------------------------PROXIMITY------------------------------------
+
+    @Override
+    public ChronoPeriod until(ChronoLocalDate endDateExclusive) {
+        //IranianDate end = IranianChronology.INSTANCE.date(endDateExclusive);
+        return null;  // TODO
+    }
+
+    @Override
+    public long until(Temporal endExclusive, TemporalUnit unit) {
+        return 0;  // TODO
+    }
+
+
+    //-------------------------MUTATION-------------------------------------
+
+    @Override
+    public ChronoLocalDate with(TemporalAdjuster adjuster) {
+        return ChronoLocalDate.super.with(adjuster);  // TODO
+    }
+
+    @Override
+    public ChronoLocalDate with(TemporalField field, long newValue) {
+        return ChronoLocalDate.super.with(field, newValue);  // TODO
+    }
+
+    @Override
+    public ChronoLocalDate plus(TemporalAmount amount) {
+        return ChronoLocalDate.super.plus(amount);  // TODO
+    }
+
+    @Override
+    public ChronoLocalDate plus(long amountToAdd, TemporalUnit unit) {
+        return ChronoLocalDate.super.plus(amountToAdd, unit);  // TODO
+    }
+
+    @Override
+    public ChronoLocalDate minus(TemporalAmount amount) {
+        return ChronoLocalDate.super.minus(amount);  // TODO
+    }
+
+    @Override
+    public ChronoLocalDate minus(long amountToSubtract, TemporalUnit unit) {
+        return ChronoLocalDate.super.minus(amountToSubtract, unit);  // TODO
+    }
+
+
+    //-------------------------PRINTING--------------------------------------
+
     @Override
     public String toString() {
         var buf = new StringBuilder(10);
         formatTo(buf);
         return buf.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        return (year & 0xFFFFF800) ^ ((year << 11) + (month << 6) + day);
     }
 
     void formatTo(StringBuilder buf) {
@@ -290,5 +383,61 @@ public class IranianDate
                 .append(monthValue)
                 .append(dayValue < 10 ? "-0" : "-")
                 .append(dayValue);
+    }
+
+
+    //-------------------------COMPRESSION-----------------------------------
+
+    @Override
+    public int hashCode() {
+        return (year & 0xFFFFF800) ^ ((year << 11) + (month << 6) + day);
+    }
+
+    @java.io.Serial
+    private Object writeReplace() {
+        return new Ser(this);
+    }
+
+    /**
+     * Defend against malicious streams.
+     */
+    @java.io.Serial
+    private void readObject(ObjectInputStream s) throws InvalidObjectException {
+        throw new InvalidObjectException("Deserialization via serialization delegate");
+    }
+
+    void writeExternal(DataOutput out) throws IOException {
+        out.writeInt(year);
+        out.writeByte(month);
+        out.writeByte(day);
+    }
+
+    static IranianDate readExternal(DataInput in) throws IOException {
+        int year = in.readInt();
+        int month = in.readByte();
+        int dayOfMonth = in.readByte();
+        return IranianDate.of(year, month, dayOfMonth);
+    }
+
+    static final class Ser implements Externalizable {
+
+        private IranianDate obj;
+
+        public Ser() {
+        }
+
+        Ser(IranianDate object) {
+            this.obj = object;
+        }
+
+        @Override
+        public void writeExternal(ObjectOutput out) throws IOException {
+            obj.writeExternal(out);
+        }
+
+        @SuppressWarnings("RedundantThrows")
+        public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+            obj = IranianDate.readExternal(in);
+        }
     }
 }

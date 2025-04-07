@@ -16,7 +16,7 @@ public class IranianDateTest {
     LocalDate greTestingDate = LocalDate.of(2025, 4, 5);
 
     @Test
-    public void creation() {
+    public void builders() {
         // of
         assertThrows(DateTimeException.class, () -> IranianDate.of(6404, 13, 1));
         assertThrows(DateTimeException.class, () -> IranianDate.of(6404, 0, 1));
@@ -78,13 +78,13 @@ public class IranianDateTest {
                 IranianDate.of(6235, 2, 16),
                 IranianDate.ofEpochDay(LocalDate.of(1856, 5, 6).toEpochDay())
         );
-
-        // etc
-        assertInstanceOf(IranianChronology.class, testingDate.getChronology());
     }
 
     @Test
-    public void lengthOfMonth() {
+    public void essentials() {
+        assertInstanceOf(IranianChronology.class, testingDate.getChronology());
+        assertEquals(IranianChronology.INSTANCE, testingDate.getChronology());
+
         assertEquals(30, IranianDate.of(6403, 12, 1).lengthOfMonth());
         assertEquals(31, IranianDate.of(6404, 1, 1).lengthOfMonth());
         assertEquals(31, IranianDate.of(6404, 2, 1).lengthOfMonth());
@@ -99,6 +99,9 @@ public class IranianDateTest {
         assertEquals(30, IranianDate.of(6404, 11, 1).lengthOfMonth());
         assertEquals(29, IranianDate.of(6404, 12, 1).lengthOfMonth());
     }
+
+
+    // --- BEGIN GETTERS ---
 
     @Test
     public void getInt() {
@@ -196,10 +199,17 @@ public class IranianDateTest {
         );*/
     }
 
+    // --- END GETTERS ---
+
+
     @Test
     public void comparison() {
         assertTrue(IranianDate.of(6404, 12, 29).isAfter(testingDate));
         assertTrue(IranianDate.of(6403, 12, 29).isBefore(testingDate));
         assertTrue(IranianDate.of(6404, 1, 16).isEqual(testingDate));
+    }
+
+    @Test
+    public void proximity() {
     }
 }

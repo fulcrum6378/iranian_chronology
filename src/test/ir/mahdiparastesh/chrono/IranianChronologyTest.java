@@ -31,6 +31,15 @@ public class IranianChronologyTest {
     }
 
     @Test
+    public void dateNow() {
+        assertDoesNotThrow(() -> IranianChronology.INSTANCE.dateNow());
+        assertEquals(
+                IranianDate.of(6404, 1, 18),
+                IranianChronology.INSTANCE.dateNow()
+        );
+    }
+
+    @Test
     public void isLeapYear() {
         assertTrue(IranianChronology.INSTANCE.isLeapYear(6403));
         assertFalse(IranianChronology.INSTANCE.isLeapYear(6404));
