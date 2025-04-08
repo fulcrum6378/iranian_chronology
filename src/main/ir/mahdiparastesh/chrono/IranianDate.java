@@ -11,6 +11,7 @@ import java.time.temporal.*;
 import java.util.Objects;
 
 import static java.time.temporal.ChronoField.*;
+import static java.time.temporal.ChronoUnit.MONTHS;
 
 @SuppressWarnings("unused")
 public class IranianDate
@@ -45,7 +46,8 @@ public class IranianDate
 
         boolean leap = IranianChronology.INSTANCE.isLeapYear(year);
         if (dayOfYear == 366 && !leap)
-            throw new DateTimeException("Invalid date 'DayOfYear 366' as '" + year + "' is not a leap year");
+            throw new DateTimeException(
+                    "Invalid date 'DayOfYear 366' as '" + year + "' is not a leap year");
 
         int month = 1;
         int maxDaysInMonth = 31;
@@ -305,9 +307,37 @@ public class IranianDate
     //-------------------------PROXIMITY------------------------------------
 
     @Override
-    public ChronoPeriod until(ChronoLocalDate endDateExclusive) {
-        //IranianDate end = IranianChronology.INSTANCE.date(endDateExclusive);
-        return null;  // TODO
+    public ChronoPeriod until(ChronoLocalDate other) {
+        IranianDate end = IranianChronology.INSTANCE.date(other);
+        int
+                y = other.get(YEAR) - this.get(YEAR),
+                m = other.get(MONTH_OF_YEAR) - this.get(MONTH_OF_YEAR),
+                d = other.get(DAY_OF_MONTH) - this.get(DAY_OF_MONTH);
+
+        if (isBefore(other)) {
+            IranianDate prevMonth = (IranianDate) other.minus(1, MONTHS);
+            if (d < 0) {
+                d += prevMonth.lengthOfMonth();
+                m--;
+            }
+            if (m < 0) {
+                m += 12;
+                y--;
+            }
+        } else {
+            if (d > 0) {
+                d = other.lengthOfMonth() - d;
+                m++;
+            } else
+                d = Math.abs(d);
+            if (m > 0) {
+                m = 12 - m;
+                y++;
+            } else
+                m = Math.abs(m);
+            y = Math.abs(y);
+        }
+        return IranianChronology.INSTANCE.period(y, m, d);
     }
 
     @Override
@@ -499,7 +529,8 @@ public class IranianDate
                 : plusDays(-daysToSubtract));
     }
 
-    private static IranianDate resolvePreviousValid(int year, int month, int day) {
+    private static IranianDate resolvePreviousValid(
+            int year, int month, int day) {
         switch (month) {
             case 12 -> day = Math.min(day, IranianChronology.INSTANCE.isLeapYear(year) ? 30 : 29);
             case 7, 8, 9, 10, 11 -> day = Math.min(day, 30);

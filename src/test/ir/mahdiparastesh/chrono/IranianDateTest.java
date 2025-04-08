@@ -4,13 +4,13 @@ import org.junit.jupiter.api.Test;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.chrono.ChronoPeriod;
 import java.time.temporal.UnsupportedTemporalTypeException;
 
 import static java.time.temporal.ChronoField.*;
 import static java.time.temporal.ChronoUnit.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SuppressWarnings("CommentedOutCode")
 public class IranianDateTest {
 
     IranianDate testingDate = IranianDate.of(6404, 1, 16);
@@ -125,6 +125,7 @@ public class IranianDateTest {
         assertThrows(IranianChronology.EraNotSupportedException.class, () -> testingDate.get(YEAR_OF_ERA));
     }
 
+    @SuppressWarnings("CommentedOutCode")
     @Test
     public void getLong() {
         assertEquals(76848L, testingDate.getLong(PROLEPTIC_MONTH));
@@ -215,6 +216,16 @@ public class IranianDateTest {
 
     @Test
     public void proximity() {
+        // unfortunately we cannot access ChronoPeriodImpl returned by until(ChronoLocalDate).
+        ChronoPeriod
+                testingUntilOrdibehesht = testingDate.until(IranianDate.of(6404, 2, 1)),
+                testingUntilPrevYear = testingDate.until(IranianDate.of(6403, 1, 16));
+        assertEquals(16, testingUntilOrdibehesht.get(DAYS));
+        assertEquals(0, testingUntilOrdibehesht.get(MONTHS));
+        assertEquals(0, testingUntilOrdibehesht.get(YEARS));
+        assertEquals(0, testingUntilPrevYear.get(DAYS));
+        assertEquals(0, testingUntilPrevYear.get(MONTHS));
+        assertEquals(1, testingUntilPrevYear.get(YEARS));
 
         assertEquals(
                 greTestingDate.until(LocalDate.now(), DAYS),

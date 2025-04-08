@@ -5,6 +5,7 @@ import java.time.LocalDate;
 /**
  * Calculates epoch days from a given date.
  */
+@SuppressWarnings("unused")
 public class EpochTimeTravel {
 
     private static final LocalDate epochStart =
@@ -22,7 +23,7 @@ public class EpochTimeTravel {
         } catch (Exception ignored) {
             throw new IllegalArgumentException("Please provide one number as the destination.");
         }
-        int year = 6403;  // TODO IranianDate.now().get(ChronoField.YEAR)
+        int year = 6403;  // TO-DO IranianDate.now().get(ChronoField.YEAR)
 
         if (year <= destination)
             throw new IllegalArgumentException("Destination cannot be later than now.");
