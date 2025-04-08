@@ -323,33 +323,42 @@ public class IranianDate
     //-------------------------MUTATION-------------------------------------
 
     @Override
-    public ChronoLocalDate with(TemporalAdjuster adjuster) {
-        return ChronoLocalDate.super.with(adjuster);  // TODO
+    public IranianDate with(TemporalAdjuster adjuster) {
+        if (adjuster instanceof IranianDate) {
+            return (IranianDate) adjuster;
+        }
+        return (IranianDate) adjuster.adjustInto(this);
     }
 
     @Override
-    public ChronoLocalDate with(TemporalField field, long newValue) {
-        return ChronoLocalDate.super.with(field, newValue);  // TODO
+    public IranianDate with(TemporalField field, long newValue) {
+        return null;  // TODO
     }
 
     @Override
-    public ChronoLocalDate plus(TemporalAmount amount) {
-        return ChronoLocalDate.super.plus(amount);  // TODO
+    public IranianDate plus(TemporalAmount amount) {
+        IranianDate altered = (IranianDate) clone();
+        for (TemporalUnit unit : amount.getUnits())
+            altered = plus(amount.get(unit), unit);
+        return altered;
     }
 
     @Override
-    public ChronoLocalDate plus(long amountToAdd, TemporalUnit unit) {
-        return ChronoLocalDate.super.plus(amountToAdd, unit);  // TODO
+    public IranianDate plus(long amountToAdd, TemporalUnit unit) {
+        return null;  // TODO
     }
 
     @Override
-    public ChronoLocalDate minus(TemporalAmount amount) {
-        return ChronoLocalDate.super.minus(amount);  // TODO
+    public IranianDate minus(TemporalAmount amount) {
+        IranianDate altered = (IranianDate) clone();
+        for (TemporalUnit unit : amount.getUnits())
+            altered = minus(amount.get(unit), unit);
+        return altered;
     }
 
     @Override
-    public ChronoLocalDate minus(long amountToSubtract, TemporalUnit unit) {
-        return ChronoLocalDate.super.minus(amountToSubtract, unit);  // TODO
+    public IranianDate minus(long amountToSubtract, TemporalUnit unit) {
+        return null;  // TODO
     }
 
 
