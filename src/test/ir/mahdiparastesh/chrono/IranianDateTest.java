@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.temporal.UnsupportedTemporalTypeException;
 
 import static java.time.temporal.ChronoField.*;
+import static java.time.temporal.ChronoUnit.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("CommentedOutCode")
@@ -80,11 +81,17 @@ public class IranianDateTest {
         );
     }
 
+
+    // --- BEGIN GETTERS ---
+
     @Test
-    public void essentials() {
+    public void chronology() {
         assertInstanceOf(IranianChronology.class, testingDate.getChronology());
         assertEquals(IranianChronology.INSTANCE, testingDate.getChronology());
+    }
 
+    @Test
+    public void lengthOfMonth() {
         assertEquals(30, IranianDate.of(6403, 12, 1).lengthOfMonth());
         assertEquals(31, IranianDate.of(6404, 1, 1).lengthOfMonth());
         assertEquals(31, IranianDate.of(6404, 2, 1).lengthOfMonth());
@@ -99,9 +106,6 @@ public class IranianDateTest {
         assertEquals(30, IranianDate.of(6404, 11, 1).lengthOfMonth());
         assertEquals(29, IranianDate.of(6404, 12, 1).lengthOfMonth());
     }
-
-
-    // --- BEGIN GETTERS ---
 
     @Test
     public void getInt() {
@@ -211,5 +215,18 @@ public class IranianDateTest {
 
     @Test
     public void proximity() {
+
+        assertEquals(
+                greTestingDate.until(LocalDate.now(), DAYS),
+                testingDate.until(IranianChronology.INSTANCE.dateNow(), DAYS)
+        );
+        assertEquals(
+                greTestingDate.until(LocalDate.now(), WEEKS),
+                testingDate.until(IranianChronology.INSTANCE.dateNow(), WEEKS)
+        );
+        assertEquals(
+                greTestingDate.until(LocalDate.now(), MONTHS),
+                testingDate.until(IranianChronology.INSTANCE.dateNow(), MONTHS)
+        );
     }
 }

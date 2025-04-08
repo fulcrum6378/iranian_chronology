@@ -98,7 +98,7 @@ public class IranianDate
     }
 
 
-    //-------------------------ESSENTIALS------------------------------------
+    //-------------------------GETTERS---------------------------------------
 
     @Override
     public Chronology getChronology() {
@@ -114,9 +114,6 @@ public class IranianDate
         else
             return isLeapYear() ? 30 : 29;
     }
-
-
-    //-------------------------GETTERS---------------------------------------
 
     @Override
     public long getLong(TemporalField field) {
@@ -315,7 +312,31 @@ public class IranianDate
 
     @Override
     public long until(Temporal endExclusive, TemporalUnit unit) {
-        return 0;  // TODO
+        IranianDate end = IranianChronology.INSTANCE.date(endExclusive);
+        if (unit instanceof ChronoUnit chronoUnit) {
+            return switch (chronoUnit) {
+                case DAYS -> daysUntil(end);
+                case WEEKS -> daysUntil(end) / 7;
+                case MONTHS -> monthsUntil(end);
+                case YEARS -> monthsUntil(end) / 12;
+                case DECADES -> monthsUntil(end) / 120;
+                case CENTURIES -> monthsUntil(end) / 1200;
+                case MILLENNIA -> monthsUntil(end) / 12000;
+                case ERAS -> end.getLong(ERA) - getLong(ERA);
+                default -> throw new UnsupportedTemporalTypeException("Unsupported unit: " + unit);
+            };
+        }
+        return unit.between(this, end);
+    }
+
+    long daysUntil(IranianDate end) {
+        return end.toEpochDay() - toEpochDay();  // no overflow
+    }
+
+    private long monthsUntil(IranianDate end) {
+        long packed1 = getProlepticMonth() * 32L + getLong(DAY_OF_MONTH);  // no overflow
+        long packed2 = end.getProlepticMonth() * 32L + end.getLong(DAY_OF_MONTH);  // no overflow
+        return (packed2 - packed1) / 32;
     }
 
 
@@ -436,7 +457,7 @@ public class IranianDate
     }
 
     public IranianDate plusDays(long daysToAdd) {
-        return null;  // TODO
+        return IranianDate.ofEpochDay(toEpochDay() + daysToAdd);
     }
 
     @Override
