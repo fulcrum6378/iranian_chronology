@@ -125,7 +125,6 @@ public class IranianDateTest {
         assertThrows(IranianChronology.EraNotSupportedException.class, () -> testingDate.get(YEAR_OF_ERA));
     }
 
-    @SuppressWarnings("CommentedOutCode")
     @Test
     public void getLong() {
         assertEquals(76848L, testingDate.getLong(PROLEPTIC_MONTH));
@@ -190,17 +189,17 @@ public class IranianDateTest {
         assertEquals(  // Isaac Newton's birthday
                 LocalDate.of(1643, 1, 4).toEpochDay(),
                 IranianDate.of(6021, 10, 14).toEpochDay()
-                // according to {Google, PersianCalendar, Fourmilab's converter}
+                // according to {Google, PersianCalendar}
         );
         /*assertEquals(  // Trijntje Keever's birthday
                 LocalDate.of(1616, 4, 10).toEpochDay(),  // -129196
                 IranianDate.of(5995, 1, 22).toEpochDay()  // -129195
-                // according to PersianCalendar & Fourmilab's converter
+                // according to PersianCalendar
         );*/
         /*assertEquals(  // Avicenna's death
                 LocalDate.of(1037, 7, 22).toEpochDay(),  // -340569
                 IranianDate.of(5416, 4, 1).toEpochDay()  // -340614
-                // according only to Fourmilab's converter; differed in PersianCalendar
+                // according only to PersianCalendar todo
         );*/
     }
 
