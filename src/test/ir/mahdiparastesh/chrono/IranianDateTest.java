@@ -191,16 +191,16 @@ public class IranianDateTest {
                 IranianDate.of(6021, 10, 14).toEpochDay()
                 // according to {Google, PersianCalendar}
         );
-        /*assertEquals(  // Trijntje Keever's birthday
-                LocalDate.of(1616, 4, 10).toEpochDay(),  // -129196
-                IranianDate.of(5995, 1, 22).toEpochDay()  // -129195
+        assertEquals(  // Trijntje Keever's birthday
+                LocalDate.of(1616, 4, 10).toEpochDay(),
+                IranianDate.of(5995, 1, 22).toEpochDay()
                 // according to PersianCalendar
-        );*/
-        /*assertEquals(  // Avicenna's death
-                LocalDate.of(1037, 7, 22).toEpochDay(),  // -340569
-                IranianDate.of(5416, 4, 1).toEpochDay()  // -340614
-                // according only to PersianCalendar todo
-        );*/
+        );
+        assertEquals(  // Avicenna's death
+                LocalDate.of(1037, 6, 22).toEpochDay(),
+                IranianDate.of(5416, 4, 2).toEpochDay()
+                // ICU PersianCalendar calculates to 5416/4/2 to 1037/6/17!
+        );
     }
 
     // --- END GETTERS ---

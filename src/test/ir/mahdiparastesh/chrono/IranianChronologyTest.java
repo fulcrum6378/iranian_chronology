@@ -41,8 +41,8 @@ public class IranianChronologyTest {
 
     @Test
     public void isLeapYear() {
-        assertFalse(IranianChronology.INSTANCE.isLeapYear(1404));
-        assertTrue(IranianChronology.INSTANCE.isLeapYear(1403));
-        assertTrue(IranianChronology.INSTANCE.isLeapYear(1391));
+        assertFalse(IranianChronology.INSTANCE.isLeapYear(6404));
+        assertTrue(IranianChronology.INSTANCE.isLeapYear(6403));
+        assertTrue(IranianChronology.INSTANCE.isLeapYear(6391));
     }
 }
