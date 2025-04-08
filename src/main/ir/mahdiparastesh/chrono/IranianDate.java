@@ -12,6 +12,7 @@ import java.util.Objects;
 
 import static java.time.temporal.ChronoField.*;
 
+@SuppressWarnings("unused")
 public class IranianDate
         implements Temporal, TemporalAdjuster, ChronoLocalDate, Serializable {
 
@@ -57,8 +58,6 @@ public class IranianDate
 
         return new IranianDate(year, month, dayOfYear);
     }
-
-    // TODO: now()
 
     public static IranianDate ofEpochDay(long epochDay) {
         int y, yearLength;
@@ -332,7 +331,60 @@ public class IranianDate
 
     @Override
     public IranianDate with(TemporalField field, long newValue) {
-        return null;  // TODO
+        if (field instanceof ChronoField chronoField) {
+            chronoField.checkValidValue(newValue);
+            return switch (chronoField) {
+                case DAY_OF_WEEK -> plusDays(
+                        newValue - getDayOfWeek().getValue());
+                case ALIGNED_DAY_OF_WEEK_IN_MONTH -> plusDays(
+                        newValue - getLong(ALIGNED_DAY_OF_WEEK_IN_MONTH));
+                case ALIGNED_DAY_OF_WEEK_IN_YEAR -> plusDays(
+                        newValue - getLong(ALIGNED_DAY_OF_WEEK_IN_YEAR));
+                case DAY_OF_MONTH -> withDayOfMonth((int) newValue);
+                case DAY_OF_YEAR -> withDayOfYear((int) newValue);
+                case EPOCH_DAY -> IranianDate.ofEpochDay(newValue);
+                case ALIGNED_WEEK_OF_MONTH -> plusWeeks(
+                        newValue - getLong(ALIGNED_WEEK_OF_MONTH));
+                case ALIGNED_WEEK_OF_YEAR -> plusWeeks(
+                        newValue - getLong(ALIGNED_WEEK_OF_YEAR));
+                case MONTH_OF_YEAR -> withMonth((int) newValue);
+                case PROLEPTIC_MONTH -> plusMonths(
+                        newValue - getProlepticMonth());
+                case YEAR -> withYear((int) newValue);
+                default -> throw new UnsupportedTemporalTypeException("Unsupported field: " + field);
+            };
+        }
+        return field.adjustInto(this, newValue);
+    }
+
+    public IranianDate withYear(int year) {
+        if (this.year == year) {
+            return this;
+        }
+        YEAR.checkValidValue(year);
+        return resolvePreviousValid(year, month, day);
+    }
+
+    public IranianDate withMonth(int month) {
+        if (this.month == month) {
+            return this;
+        }
+        MONTH_OF_YEAR.checkValidValue(month);
+        return resolvePreviousValid(year, month, day);
+    }
+
+    public IranianDate withDayOfMonth(int dayOfMonth) {
+        if (this.day == dayOfMonth) {
+            return this;
+        }
+        return of(year, month, dayOfMonth);
+    }
+
+    public IranianDate withDayOfYear(int dayOfYear) {
+        if (this.getDayOfYear() == dayOfYear) {
+            return this;
+        }
+        return ofYearDay(year, dayOfYear);
     }
 
     @Override
@@ -345,6 +397,45 @@ public class IranianDate
 
     @Override
     public IranianDate plus(long amountToAdd, TemporalUnit unit) {
+        if (unit instanceof ChronoUnit chronoUnit) {
+            return switch (chronoUnit) {
+                case DAYS -> plusDays(amountToAdd);
+                case WEEKS -> plusWeeks(amountToAdd);
+                case MONTHS -> plusMonths(amountToAdd);
+                case YEARS -> plusYears(amountToAdd);
+                case DECADES -> plusYears(Math.multiplyExact(amountToAdd, 10));
+                case CENTURIES -> plusYears(Math.multiplyExact(amountToAdd, 100));
+                case MILLENNIA -> plusYears(Math.multiplyExact(amountToAdd, 1000));
+                default -> throw new UnsupportedTemporalTypeException("Unsupported unit: " + unit);
+            };
+        }
+        return unit.addTo(this, amountToAdd);
+    }
+
+    public IranianDate plusYears(long yearsToAdd) {
+        if (yearsToAdd == 0) {
+            return this;
+        }
+        int newYear = YEAR.checkValidIntValue(year + yearsToAdd);  // safe overflow
+        return resolvePreviousValid(newYear, month, day);
+    }
+
+    public IranianDate plusMonths(long monthsToAdd) {
+        if (monthsToAdd == 0) {
+            return this;
+        }
+        long monthCount = year * 12L + (month - 1);
+        long calcMonths = monthCount + monthsToAdd;  // safe overflow
+        int newYear = YEAR.checkValidIntValue(Math.floorDiv(calcMonths, 12));
+        int newMonth = Math.floorMod(calcMonths, 12) + 1;
+        return resolvePreviousValid(newYear, newMonth, day);
+    }
+
+    public IranianDate plusWeeks(long weeksToAdd) {
+        return plusDays(Math.multiplyExact(weeksToAdd, 7));
+    }
+
+    public IranianDate plusDays(long daysToAdd) {
         return null;  // TODO
     }
 
@@ -358,7 +449,41 @@ public class IranianDate
 
     @Override
     public IranianDate minus(long amountToSubtract, TemporalUnit unit) {
-        return null;  // TODO
+        return (amountToSubtract == Long.MIN_VALUE
+                ? plus(Long.MAX_VALUE, unit).plus(1, unit)
+                : plus(-amountToSubtract, unit));
+    }
+
+    public IranianDate minusYears(long yearsToSubtract) {
+        return (yearsToSubtract == Long.MIN_VALUE
+                ? plusYears(Long.MAX_VALUE).plusYears(1)
+                : plusYears(-yearsToSubtract));
+    }
+
+    public IranianDate minusMonths(long monthsToSubtract) {
+        return (monthsToSubtract == Long.MIN_VALUE
+                ? plusMonths(Long.MAX_VALUE).plusMonths(1)
+                : plusMonths(-monthsToSubtract));
+    }
+
+    public IranianDate minusWeeks(long weeksToSubtract) {
+        return (weeksToSubtract == Long.MIN_VALUE
+                ? plusWeeks(Long.MAX_VALUE).plusWeeks(1)
+                : plusWeeks(-weeksToSubtract));
+    }
+
+    public IranianDate minusDays(long daysToSubtract) {
+        return (daysToSubtract == Long.MIN_VALUE
+                ? plusDays(Long.MAX_VALUE).plusDays(1)
+                : plusDays(-daysToSubtract));
+    }
+
+    private static IranianDate resolvePreviousValid(int year, int month, int day) {
+        switch (month) {
+            case 12 -> day = Math.min(day, IranianChronology.INSTANCE.isLeapYear(year) ? 30 : 29);
+            case 7, 8, 9, 10, 11 -> day = Math.min(day, 30);
+        }
+        return new IranianDate(year, month, day);
     }
 
 
