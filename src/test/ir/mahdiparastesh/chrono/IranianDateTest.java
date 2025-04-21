@@ -138,10 +138,6 @@ public class IranianDateTest {
                 LocalDate.of(2000, 2, 6).toEpochDay(),
                 IranianDate.of(6378, 11, 17).toEpochDay()
         );
-        assertEquals(  // Mobina Jafarian's birthday
-                LocalDate.of(1999, 8, 21).toEpochDay(),
-                IranianDate.of(6378, 5, 30).toEpochDay()
-        );
         assertEquals(  // dissolution of the Soviet Union
                 LocalDate.of(1991, 12, 26).toEpochDay(),
                 IranianDate.of(6370, 10, 5).toEpochDay()

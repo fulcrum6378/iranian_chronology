@@ -1,4 +1,4 @@
 Set-Location out/production/IranianChronology
-jar vcfe ../../jar/IranianChronology/iranian-chronology-1.0.jar -C `
-    ir/mahdiparastesh/chrono/IranianChronology*.class `
-    ir/mahdiparastesh/chrono/IranianDate*.class
+jar cfmv ../../jar/IranianChronology/iranian-chronology-1.1.jar ../../../META-INF/MANIFEST.MF `
+    ir/mahdiparastesh/chrono/*.class `
+    ../../../LICENSE.txt `
